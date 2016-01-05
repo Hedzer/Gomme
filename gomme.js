@@ -27,40 +27,6 @@ var Gomme = (function(window){
 					}
 				} else {
 					Gomme.Tools.add(p, key)
-					// Object.defineProperty(p, key, {
-					// 	get:function(){
-					// 		if (this.$.hasOwnProperty("store")){
-					// 			if (this.$.store.hasOwnProperty(key)){
-					// 				return this.$.store[key];
-					// 			}
-					// 		}
-					// 		var prototype = Object.getPrototypeOf(this);
-					// 		return prototype.$.original[key];
-					// 	},
-					// 	set:function(value){
-					// 		if (this.$){
-					// 			var old = this.$.store[key];
-					// 			this.$.store[key] = value;
-					// 			if (old !== value){
-					// 				var data = {
-					// 					owner:this,
-					// 					property:key,
-					// 					old:old,
-					// 					new:value
-					// 				};
-					// 				if (this.$.trigger){
-					// 					this.$.trigger(key, data);
-					// 					this.$.trigger("*", data);
-					// 					if (this.$.parent){
-					// 						this.$.parent.$.trigger("*", data);
-					// 					}
-					// 				}
-					// 				data = null;
-					// 				old = null;
-					// 			}			
-					// 		}
-					// 	}
-					// });
 				}
 			});
 			return method;
