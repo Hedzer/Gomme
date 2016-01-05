@@ -1,1 +1,2 @@
 # Gomme
+Gomme is lightweight framework for creating JavaScript data models with evented properties.  When a property changes, an event is fired.  This allows you to respond to changes in data as they occur.
