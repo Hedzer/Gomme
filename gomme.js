@@ -2,8 +2,8 @@ var Gomme = (function(window){
 	'use strict';
 	var Gomme = {
 		model:function model(name, structure){
-			var method = Function('return function '+name.replace(/[^a-z|A-Z_]/g, '')+'(){\
-				Gomme.Classes.base.apply(this, arguments);\
+			var method = Function('return function '+name.replace(/[^a-z|A-Z_]/g, '')+'(a, b, c, d, e, f, g, h, i, j, k){\
+				Gomme.Classes.base.call(this, a, b, c, d, e, f, g, h, i, j, k);\
 			}')();
 			var p = method.prototype;
 			Object.defineProperty(p, "$", {
@@ -88,8 +88,7 @@ var Gomme = (function(window){
 			}
 		},
 		Classes:{
-			base:function base(){
-				var args = Array.prototype.slice.call(arguments);
+			base:function base(a, b, c, d, e, f, g, h, i, j, k){
 				var self = this;
 				Object.defineProperty(this, "$", {
 					enumerable:false,
@@ -104,12 +103,12 @@ var Gomme = (function(window){
 						if (subclass.constructor === Array){
 							self[key] = Gomme.Extenders.array([]);
 						} else {
-							self[key] = new (subclass.bind.apply(subclass, args));
+							self[key] = new subclass(a, b, c, d, e, f, g, h, i, j, k);
 						}
 						self[key].$.parent = (self.$.parent || self);
 					});
 					if (typeof this.$.constructor === "function"){
-						this.$.constructor.apply(this.$, args);
+						this.$.constructor(a, b, c, d, e, f, g, h, i, j, k);
 					}					
 				}
 			},
