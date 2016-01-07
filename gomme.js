@@ -34,11 +34,71 @@ var Gomme = (function(window){
 		collection:function(model){
 			//tools for managing collections of models
 		},
+		Constants:{
+			arrayMethodMap:(function(){
+				var list = {
+					"from":false,
+					"isArray":false,
+					"observe":false,
+					"of":false,
+					"concat":false,
+					"copyWithin":false,
+					"entries":false,
+					"every":false,
+					"fill":false,
+					"filter":false,
+					"find":false,
+					"findIndex":false,
+					"forEach":false,
+					"includes":false,
+					"indexOf":false,
+					"join":false,
+					"keys":false,
+					"lastIndexOf":false,
+					"map":false,
+					"pop":false,
+					"push":false,
+					"reduce":false,
+					"reduceRight":false,
+					"reverse":false,
+					"shift":false,
+					"slice":false,
+					"some":false,
+					"sort":false,
+					"splice":false,
+					"toLocaleString":false,
+					"toSource":false,
+					"toString":false,
+					"unshift":false,
+					"values":false,
+					"unobserve":false
+				};
+				Object.keys(list).forEach(function(method){
+					list[method] = function(original){
+						if (this.$ && this.$.trigger){
+							this.$.trigger(method, arguments);
+							this.$.trigger("*", arguments);
+							if (this.$.parent){
+								this.$.parent.$.trigger("*", arguments);
+							}
+						}
+						var args = Array.prototype.slice.call(arguments);
+						args.shift();
+						args.shift();
+						return original.apply(this, args);
+					};
+				});
+				return list;
+			})(),
+
+		},
 		Tools:{
-			uid:function uid(){
-				var now = new Date().valueOf();
-				return now.toString(16)+"-"+parseInt(Math.random()*now).toString(16);
-			},
+			uid:(function(){
+				var current = 0;
+				return function uid(){
+					return current++;
+				}				
+			})(),
 			add:function(host, key){
 				Object.defineProperty(host, key, {
 					get:function(){
@@ -231,56 +291,10 @@ var Gomme = (function(window){
 					writable:true,
 					value:new Gomme.Classes.$(array)
 				});
-				var methodMap = [
-					"from",
-					"isArray",
-					"observe",
-					"of",
-					"concat",
-					"copyWithin",
-					"entries",
-					"every",
-					"fill",
-					"filter",
-					"find",
-					"findIndex",
-					"forEach",
-					"includes",
-					"indexOf",
-					"join",
-					"keys",
-					"lastIndexOf",
-					"map",
-					"pop",
-					"push",
-					"reduce",
-					"reduceRight",
-					"reverse",
-					"shift",
-					"slice",
-					"some",
-					"sort",
-					"splice",
-					"toLocaleString",
-					"toSource",
-					"toString",
-					"unshift",
-					"values",
-					"unobserve"
-				];
-				methodMap.forEach(function(method){
+				Gomme.Constants.arrayMethodMap.forEach(function(method){
 					if (typeof array[method] === "function"){
 						var original = array[method];
-						array[method] = function(){
-							if (this.$ && this.$.trigger){
-								this.$.trigger(method, arguments);
-								this.$.trigger("*", arguments);
-								if (this.$.parent){
-									this.$.parent.$.trigger("*", arguments);
-								}
-							}
-							return original.apply(array, arguments);
-						};
+						array[method] = Gomme.Constants.arrayMethodMap[method].bind(array, original);
 					}
 				});
 				return array;
