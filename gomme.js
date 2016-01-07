@@ -19,7 +19,7 @@ var Gomme = (function(window){
 				var value = structure[key];
 				if (typeof value === "object"){
 					if (value.constructor === Array){
-
+						p.$.subclasses[key] = [];
 						return;
 					} else {
 						var subname = name+"_"+key;
@@ -30,6 +30,9 @@ var Gomme = (function(window){
 				}
 			});
 			return method;
+		},
+		collection:function(model){
+			//tools for managing collections of models
 		},
 		Tools:{
 			uid:function uid(){
@@ -58,7 +61,7 @@ var Gomme = (function(window){
 									old:old,
 									new:value
 								};
-								if (this.$.trigger){
+								if (this.$ && this.$.trigger){
 									this.$.trigger(key, data);
 									this.$.trigger("*", data);
 									if (this.$.parent){
@@ -67,7 +70,7 @@ var Gomme = (function(window){
 								}
 								data = null;
 								old = null;
-							}			
+							}
 						}
 					}
 				});
@@ -94,24 +97,30 @@ var Gomme = (function(window){
 					value:new Gomme.Classes.$(this)
 				});
 				var prototype = Object.getPrototypeOf(this);
-				Object.keys(prototype.$.subclasses).forEach(function(key){
-					var subclass = prototype.$.subclasses[key];
-					self[key] = new subclass(a, b, c, d, e, f, g, h, i, j, k);
-					self[key].$.parent = (self.$.parent || self);
-				});
-				if (typeof this.$.constructor === "function"){
-					this.$.constructor(a, b, c, d, e, f, g, h, i, j, k);
+				if (prototype && prototype.$){
+					Object.keys(prototype.$.subclasses).forEach(function(key){
+						var subclass = prototype.$.subclasses[key];
+						if (subclass.constructor === Array){
+							self[key] = Gomme.Extenders.array([]);
+						} else {
+							self[key] = new subclass(a, b, c, d, e, f, g, h, i, j, k);
+						}
+						self[key].$.parent = (self.$.parent || self);
+					});
+					if (typeof this.$.constructor === "function"){
+						this.$.constructor(a, b, c, d, e, f, g, h, i, j, k);
+					}					
 				}
 			},
 			$:(function(){
-				function $(host){
+				function $gomme(host){
 					if (!host){return;}
 					this.id = Gomme.Tools.uid();
 					this.host = host;
 					this.store = {};
 					this.events = {};
 				};
-				var $p = $.prototype;
+				var $p = $gomme.prototype;
 				$p.dispose = function dispose(async){
 					var self = this;
 					async = (async || false);
@@ -205,12 +214,76 @@ var Gomme = (function(window){
 						});
 					}
 				};
-				return $;
+				return $gomme;
 			})()
 		},
 		Extenders:{
 			array:function extendArray(array){
-
+				if (!(array && typeof array === "object" && array.constructor === Array)){
+					array = [];
+				}
+				if (array.$){
+					return array;
+				}
+				Object.defineProperty(array, "$", {
+					enumerable:false,
+					configurable:true,
+					writable:true,
+					value:new Gomme.Classes.$(array)
+				});
+				var methodMap = [
+					"from",
+					"isArray",
+					"observe",
+					"of",
+					"concat",
+					"copyWithin",
+					"entries",
+					"every",
+					"fill",
+					"filter",
+					"find",
+					"findIndex",
+					"forEach",
+					"includes",
+					"indexOf",
+					"join",
+					"keys",
+					"lastIndexOf",
+					"map",
+					"pop",
+					"push",
+					"reduce",
+					"reduceRight",
+					"reverse",
+					"shift",
+					"slice",
+					"some",
+					"sort",
+					"splice",
+					"toLocaleString",
+					"toSource",
+					"toString",
+					"unshift",
+					"values",
+					"unobserve"
+				];
+				methodMap.forEach(function(method){
+					if (typeof array[method] === "function"){
+						var original = array[method];
+						array[method] = function(){
+							if (this.$ && this.$.trigger){
+								this.$.trigger(method, arguments);
+								this.$.trigger("*", arguments);
+								if (this.$.parent){
+									this.$.parent.$.trigger("*", arguments);
+								}
+							}
+							return original.apply(array, arguments);
+						};
+					}
+				});
+				return array;
 			}
 		}
 	};
