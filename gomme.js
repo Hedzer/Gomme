@@ -31,9 +31,9 @@ var Gomme = (function(window){
 			});
 			return method;
 		},
-		collection:function(model){
-			//tools for managing collections of models
-		},
+		// collection:function(model){
+		// 	//tools for managing collections of models
+		// },
 		Constants:{
 			arrayMethodMap:(function(){
 				var list = {
@@ -90,7 +90,6 @@ var Gomme = (function(window){
 				});
 				return list;
 			})(),
-
 		},
 		Tools:{
 			uid:(function(){
@@ -227,13 +226,13 @@ var Gomme = (function(window){
 						delete self.host[key];
 					});
 					cleanup();
-				}
-				$p.add = function add(name, value){
-
 				};
-				$p.remove = function remove(name){
+				// $p.add = function add(name, value){
 
-				};
+				// };
+				// $p.remove = function remove(name){
+
+				// };
 				$p.on = function on(name, method){
 					if (name && typeof method === "function"){
 						this.events[name] = (this.events[name] || {});
