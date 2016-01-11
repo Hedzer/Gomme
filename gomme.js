@@ -111,7 +111,13 @@ var Gomme = (function(window){
 					},
 					set:function(value){
 						if (this.$){
-							var old = this.$.store[key];
+							var old = undefined;
+							if (this.$.store && this.$.store.hasOwnProperty(key)){
+								old = this.$.store[key];
+							} else {
+								var prototype = Object.getPrototypeOf(this);
+								old = prototype.$.original[key];
+							}
 							this.$.store[key] = value;
 							if (old !== value){
 								var data = {
