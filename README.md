@@ -38,7 +38,7 @@ someone.age = 47;
 ```
 The above would generate a `console.log` with the message `Old value 18 was changed to 47`.  Despite inheriting values, instances don't hold copies of default values.
 
-If you wanted to add an event listener to a nested member, simply call the `$.on` method on the desired child. For example:
+If you wanted to add an event listener to a nested member, simply call the `$.on` function on the desired child. For example:
 ```javascript
 var someone = new person();
 someone.name.$.on("first", function(e){
@@ -52,12 +52,56 @@ When finished with an instance, it can safely be disposed of by calling `instanc
 
 ### Advanced Usage
 ##### Coming Soon (features finished, but to be documented)
-###### Monitoring All Properties For Change
-###### Manually Triggering Events
+
+##### Monitoring All Properties For Change
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;It is possible to monitor all properties for change using the `$.on` function with a property name of `*`.  The code below shows how to use this feature.
+```javascript
+var someone = new person();
+someone.$.on("*", function(e){
+	console.log(e);
+});
+someone.name.first = "Lemon";
+```
+The above would generate a `console.log` with an object.  The `e` object in the prior example has the following structure:
+```javascript
+{
+	new:"Lemony",      //the new, current value
+	old:"John",        //the previous value
+	owner:person_name, //the class or sublclass that triggered the event
+	property:"first"   //the name of the property
+}
+```
+
+##### Manually Triggering Events
+Events are triggered when values change, but they can also be triggered manually using the `$.trigger` function.  The following is an example of its usage.
+```javascript
+var someone = new person();
+someone.$.on("age", function(e){
+	console.log("Old value "+e.old+" was changed to "+e.new);
+});
+someone.$.trigger("age", {
+	old:10,
+	new:20
+});
+```
+The above would generate a `console.log` with the message `Old value 10 was changed to 20`. The `$.trigger` function should be passed an object formatted similarly to that generated when an event is triggered by Gomme. A previous example shows the contents of the `e` variable, which follows the expected format.
+
 ###### Removing Events
+Sometimes an event needs to be removed.  When the `$.on` function is called, it returns a handle object that contains two methods, `remove` and `removeAll`.  The `remove` method removes the event that was added from the `$.on` function call that resulted in that handle. The `removeAll` method removes all the functions assigned under the event passed to the `$.on` function that resulted in that handle. Check out the example below for a little more clarity.
+```javascript
+var someone = new person();
+var handle = someone.$.on("age", function(e){
+	console.log("Old value "+e.old+" was changed to "+e.new);
+	handle.remove();
+});
+```
+When `age` is changed on `someone`, the function assigned to the age change event will run and then be removed.  `remove` allows the removal of specific functions. If `removeAll` had been used, it would have removed all functions set to be run by the age changed event.
+
 ###### Arrays In Models
+
 ###### Async Disposal
 
 ### Future Features
 ###### Managing Collections
 ###### On-The-Fly Additions/Removals
+###### Anonymous Adds
