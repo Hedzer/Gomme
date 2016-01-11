@@ -1,5 +1,5 @@
 ### Gomme
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Gomme is a lightweight framework for creating JavaScript data structures with evented properties.  When a property changes, an event is fired.  This allows you to respond to changes in data as they occur.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Gomme is a lightweight tool for creating JavaScript data structures with eventful properties.  When a property changes, an event is fired.  This allows you to respond to changes in data as they occur.
 
 ### Usage
 Include the JavaScript file in your HTML.
