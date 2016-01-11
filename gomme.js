@@ -93,9 +93,15 @@ var Gomme = (function(window){
 		},
 		Tools:{
 			uid:(function(){
+				var prefix = "";
 				var current = 0;
+				var max = Number.MAX_SAFE_INTEGER - 5;
 				return function uid(){
-					return current++;
+					if (current > max){
+						prefix+=current;
+						current = 0;
+					}
+					return prefix+current++;
 				}				
 			})(),
 			add:function(host, key){
