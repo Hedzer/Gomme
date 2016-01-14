@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="description" content="Gomme : Gomme is a lightweight tool for creating JavaScript data structures with eventful properties.">
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Gomme</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/Hedzer/Gomme">View on GitHub</a>
+
+          <h1 id="project_title">Gomme</h1>
+          <h2 id="project_tagline">Gomme is a lightweight tool for creating JavaScript data structures with eventful properties.</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/Hedzer/Gomme/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/Hedzer/Gomme/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h3>
+<a id="gomme" class="anchor" href="#gomme" aria-hidden="true"><span class="octicon octicon-link"></span></a>Gomme</h3>
+
+<p>     Gomme is a lightweight tool for creating JavaScript data structures with eventful properties.  When a property changes, an event is fired.  This allows you to respond to changes in data as they occur.</p>
+
+<h3>
+<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Usage</h3>
+
+<p>Include the JavaScript file in your HTML.</p>
+
+<div class="highlight highlight-text-html-basic"><pre><span class="pl-s1">    &lt;<span class="pl-ent">script</span> <span class="pl-e">type</span>=<span class="pl-s"><span class="pl-pds">"</span>text/javascript<span class="pl-pds">"</span></span> <span class="pl-e">src</span>=<span class="pl-s"><span class="pl-pds">"</span>gomme.js<span class="pl-pds">"</span></span>&gt;&lt;/<span class="pl-ent">script</span>&gt;</span></pre></div>
+
+<p>Create a class based on a model</p>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-k">var</span> person <span class="pl-k">=</span> <span class="pl-smi">Gomme</span>.<span class="pl-en">model</span>(<span class="pl-s"><span class="pl-pds">"</span>person<span class="pl-pds">"</span></span>, 
+    {
+        age<span class="pl-k">:</span><span class="pl-c1">18</span>,
+        name<span class="pl-k">:</span>{
+            first<span class="pl-k">:</span><span class="pl-s"><span class="pl-pds">"</span>John<span class="pl-pds">"</span></span>,
+            middle<span class="pl-k">:</span><span class="pl-s"><span class="pl-pds">"</span>Major<span class="pl-pds">"</span></span>,
+            last<span class="pl-k">:</span><span class="pl-s"><span class="pl-pds">"</span>Doe<span class="pl-pds">"</span></span>
+        },
+        birthday<span class="pl-k">:</span>{
+            month<span class="pl-k">:</span><span class="pl-c1">2</span>,
+            day<span class="pl-k">:</span><span class="pl-c1">12</span>,
+            year<span class="pl-k">:</span><span class="pl-c1">1987</span>
+        }
+    }
+);</pre></div>
+
+<p>The code above creates and returns the <code>person</code> class. Now, the following can be done:</p>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-k">var</span> someone <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">person</span>();</pre></div>
+
+<p>The variable <code>someone</code> will contain the same structure as above, along with all the default values. Now event listeners can be created to handle change. Here's how to handle change:</p>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-k">var</span> someone <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">person</span>();
+<span class="pl-smi">someone</span>.<span class="pl-smi">$</span>.<span class="pl-en">on</span>(<span class="pl-s"><span class="pl-pds">"</span>age<span class="pl-pds">"</span></span>, <span class="pl-k">function</span>(<span class="pl-smi">e</span>){
+    <span class="pl-en">console</span>.<span class="pl-c1">log</span>(<span class="pl-s"><span class="pl-pds">"</span>Old value <span class="pl-pds">"</span></span><span class="pl-k">+</span><span class="pl-smi">e</span>.<span class="pl-smi">old</span><span class="pl-k">+</span><span class="pl-s"><span class="pl-pds">"</span> was changed to <span class="pl-pds">"</span></span><span class="pl-k">+</span><span class="pl-smi">e</span>.<span class="pl-smi">new</span>);
+});
+<span class="pl-smi">someone</span>.<span class="pl-smi">age</span> <span class="pl-k">=</span> <span class="pl-c1">47</span>;</pre></div>
+
+<p>The above would generate a <code>console.log</code> with the message <code>Old value 18 was changed to 47</code>.  Despite inheriting values, instances don't hold copies of default values.</p>
+
+<p>If you wanted to add an event listener to a nested member, simply call the <code>$.on</code> function on the desired child. For example:</p>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-k">var</span> someone <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">person</span>();
+<span class="pl-smi">someone</span>.<span class="pl-c1">name</span>.<span class="pl-smi">$</span>.<span class="pl-en">on</span>(<span class="pl-s"><span class="pl-pds">"</span>first<span class="pl-pds">"</span></span>, <span class="pl-k">function</span>(<span class="pl-smi">e</span>){
+    <span class="pl-en">console</span>.<span class="pl-c1">log</span>(<span class="pl-s"><span class="pl-pds">"</span>Old value <span class="pl-pds">"</span></span><span class="pl-k">+</span><span class="pl-smi">e</span>.<span class="pl-smi">old</span><span class="pl-k">+</span><span class="pl-s"><span class="pl-pds">"</span> was changed to <span class="pl-pds">"</span></span><span class="pl-k">+</span><span class="pl-smi">e</span>.<span class="pl-smi">new</span>);
+});
+<span class="pl-smi">someone</span>.<span class="pl-c1">name</span>.<span class="pl-smi">first</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>Lemon<span class="pl-pds">"</span></span>;</pre></div>
+
+<p>The above would generate a <code>console.log</code> with the message <code>Old value John was changed to Lemon</code>.</p>
+
+<p>When finished with an instance, it can safely be disposed of by calling <code>instance.$.dispose()</code>. The prior example would use <code>someone.$.dispose()</code>.</p>
+
+<h3>
+<a id="advanced-usage" class="anchor" href="#advanced-usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Advanced Usage</h3>
+
+<h5>
+<a id="monitoring-all-properties-for-change" class="anchor" href="#monitoring-all-properties-for-change" aria-hidden="true"><span class="octicon octicon-link"></span></a>Monitoring All Properties For Change</h5>
+
+<p>     It is possible to monitor all properties for change using the <code>$.on</code> function with a property name of <code>*</code>.  The code below shows how to use this feature.</p>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-k">var</span> someone <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">person</span>();
+<span class="pl-smi">someone</span>.<span class="pl-smi">$</span>.<span class="pl-en">on</span>(<span class="pl-s"><span class="pl-pds">"</span>*<span class="pl-pds">"</span></span>, <span class="pl-k">function</span>(<span class="pl-smi">e</span>){
+    <span class="pl-en">console</span>.<span class="pl-c1">log</span>(e);
+});
+<span class="pl-smi">someone</span>.<span class="pl-c1">name</span>.<span class="pl-smi">first</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>Lemon<span class="pl-pds">"</span></span>;</pre></div>
+
+<p>The above would generate a <code>console.log</code> with an object.  The <code>e</code> object in the prior example has the following structure:</p>
+
+<div class="highlight highlight-source-js"><pre>{
+    new<span class="pl-k">:</span><span class="pl-s"><span class="pl-pds">"</span>Lemony<span class="pl-pds">"</span></span>,      <span class="pl-c">//the new, current value</span>
+    old<span class="pl-k">:</span><span class="pl-s"><span class="pl-pds">"</span>John<span class="pl-pds">"</span></span>,        <span class="pl-c">//the previous value</span>
+    owner<span class="pl-k">:</span>person_name, <span class="pl-c">//the class or sublclass that triggered the event</span>
+    property<span class="pl-k">:</span><span class="pl-s"><span class="pl-pds">"</span>first<span class="pl-pds">"</span></span>   <span class="pl-c">//the name of the property</span>
+}</pre></div>
+
+<h5>
+<a id="manually-triggering-events" class="anchor" href="#manually-triggering-events" aria-hidden="true"><span class="octicon octicon-link"></span></a>Manually Triggering Events</h5>
+
+<p>Events are triggered when values change, but they can also be triggered manually using the <code>$.trigger</code> function.  The following is an example of its usage.</p>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-k">var</span> someone <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">person</span>();
+<span class="pl-smi">someone</span>.<span class="pl-smi">$</span>.<span class="pl-en">on</span>(<span class="pl-s"><span class="pl-pds">"</span>age<span class="pl-pds">"</span></span>, <span class="pl-k">function</span>(<span class="pl-smi">e</span>){
+    <span class="pl-en">console</span>.<span class="pl-c1">log</span>(<span class="pl-s"><span class="pl-pds">"</span>Old value <span class="pl-pds">"</span></span><span class="pl-k">+</span><span class="pl-smi">e</span>.<span class="pl-smi">old</span><span class="pl-k">+</span><span class="pl-s"><span class="pl-pds">"</span> was changed to <span class="pl-pds">"</span></span><span class="pl-k">+</span><span class="pl-smi">e</span>.<span class="pl-smi">new</span>);
+});
+<span class="pl-smi">someone</span>.<span class="pl-smi">$</span>.<span class="pl-en">trigger</span>(<span class="pl-s"><span class="pl-pds">"</span>age<span class="pl-pds">"</span></span>, {
+    old<span class="pl-k">:</span><span class="pl-c1">10</span>,
+    new<span class="pl-k">:</span><span class="pl-c1">20</span>
+});</pre></div>
+
+<p>The above would generate a <code>console.log</code> with the message <code>Old value 10 was changed to 20</code>. The <code>$.trigger</code> function should be passed an object formatted similarly to that generated when an event is triggered by Gomme. A previous example shows the contents of the <code>e</code> variable, which follows the expected format.</p>
+
+<h6>
+<a id="removing-events" class="anchor" href="#removing-events" aria-hidden="true"><span class="octicon octicon-link"></span></a>Removing Events</h6>
+
+<p>Sometimes an event needs to be removed.  When the <code>$.on</code> function is called, it returns a handle object that contains two methods, <code>remove</code> and <code>removeAll</code>.  The <code>remove</code> method removes the event that was added from the <code>$.on</code> function call that resulted in that handle. The <code>removeAll</code> method removes all the functions assigned under the event passed to the <code>$.on</code> function that resulted in that handle. Check out the example below for a little more clarity.</p>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-k">var</span> someone <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">person</span>();
+<span class="pl-k">var</span> handle <span class="pl-k">=</span> <span class="pl-smi">someone</span>.<span class="pl-smi">$</span>.<span class="pl-en">on</span>(<span class="pl-s"><span class="pl-pds">"</span>age<span class="pl-pds">"</span></span>, <span class="pl-k">function</span>(<span class="pl-smi">e</span>){
+    <span class="pl-en">console</span>.<span class="pl-c1">log</span>(<span class="pl-s"><span class="pl-pds">"</span>Old value <span class="pl-pds">"</span></span><span class="pl-k">+</span><span class="pl-smi">e</span>.<span class="pl-smi">old</span><span class="pl-k">+</span><span class="pl-s"><span class="pl-pds">"</span> was changed to <span class="pl-pds">"</span></span><span class="pl-k">+</span><span class="pl-smi">e</span>.<span class="pl-smi">new</span>);
+    <span class="pl-smi">handle</span>.<span class="pl-en">remove</span>();
+});</pre></div>
+
+<p>When <code>age</code> is changed on <code>someone</code>, the function assigned to the age change event will run and then be removed.  <code>remove</code> allows the removal of specific functions. If <code>removeAll</code> had been used, it would have removed all functions set to be run by the age changed event.</p>
+
+<h6>
+<a id="arrays-in-models" class="anchor" href="#arrays-in-models" aria-hidden="true"><span class="octicon octicon-link"></span></a>Arrays In Models</h6>
+
+<p>Models can contain arrays; these will also trigger events. Consider the following structure,</p>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-k">var</span> person <span class="pl-k">=</span> <span class="pl-smi">Gomme</span>.<span class="pl-en">model</span>(<span class="pl-s"><span class="pl-pds">"</span>person<span class="pl-pds">"</span></span>, 
+    {
+        age<span class="pl-k">:</span><span class="pl-c1">18</span>,
+        name<span class="pl-k">:</span>{
+            first<span class="pl-k">:</span><span class="pl-s"><span class="pl-pds">"</span>John<span class="pl-pds">"</span></span>,
+            middle<span class="pl-k">:</span><span class="pl-s"><span class="pl-pds">"</span>Major<span class="pl-pds">"</span></span>,
+            last<span class="pl-k">:</span><span class="pl-s"><span class="pl-pds">"</span>Doe<span class="pl-pds">"</span></span>
+        },
+        birthday<span class="pl-k">:</span>{
+            month<span class="pl-k">:</span><span class="pl-c1">2</span>,
+            day<span class="pl-k">:</span><span class="pl-c1">12</span>,
+            year<span class="pl-k">:</span><span class="pl-c1">1987</span>
+        },
+        friends<span class="pl-k">:</span>[]
+    }
+);</pre></div>
+
+<p>Once an instance of the person model has been created, the <code>friends</code> property will contain an array with modified functions.  When these functions are called, they trigger events. Here's an example of how to use them.</p>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-k">var</span> someone <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">person</span>();
+<span class="pl-smi">someone</span>.<span class="pl-smi">friends</span>.<span class="pl-smi">$</span>.<span class="pl-en">on</span>(<span class="pl-s"><span class="pl-pds">"</span>push<span class="pl-pds">"</span></span>, <span class="pl-k">function</span>(<span class="pl-smi">e</span>){
+    <span class="pl-en">console</span>.<span class="pl-c1">log</span>(e);
+});
+<span class="pl-smi">someone</span>.<span class="pl-smi">friends</span>.<span class="pl-c1">push</span>(<span class="pl-s"><span class="pl-pds">"</span>Fred<span class="pl-pds">"</span></span>);</pre></div>
+
+<p>The above would generate a <code>console.log</code> with an object.  The <code>e</code> object has the following structure:</p>
+
+<div class="highlight highlight-source-js"><pre>{
+    arguments<span class="pl-k">:</span>[<span class="pl-s"><span class="pl-pds">"</span>Fred<span class="pl-pds">"</span></span>], <span class="pl-c">//the argument given to the function</span>
+    result<span class="pl-k">:</span><span class="pl-c1">1</span>  <span class="pl-c">//the result of running the function</span>
+}</pre></div>
+
+<h6>
+<a id="async-disposal" class="anchor" href="#async-disposal" aria-hidden="true"><span class="octicon octicon-link"></span></a>Async Disposal</h6>
+
+<p>Disposal deletes properties and nulls variables to properly trigger garbage collection; this can be rather intensive sometimes.  If it's becoming an issue, the process has an async mode that can be activated.  By running <code>$.dispose(true)</code>, dispose can be made to run whenever it gets processor time instead of running immediately. If dispose is called with a callback (<code>$.dispose(callback)</code>), it will also run asynchronously and will run the callback when finished.</p>
+
+<h3>
+<a id="future-features" class="anchor" href="#future-features" aria-hidden="true"><span class="octicon octicon-link"></span></a>Future Features</h3>
+
+<h6>
+<a id="managing-collections" class="anchor" href="#managing-collections" aria-hidden="true"><span class="octicon octicon-link"></span></a>Managing Collections</h6>
+
+<h6>
+<a id="on-the-fly-additionsremovals" class="anchor" href="#on-the-fly-additionsremovals" aria-hidden="true"><span class="octicon octicon-link"></span></a>On-The-Fly Additions/Removals</h6>
+
+<h6>
+<a id="anonymous-adds" class="anchor" href="#anonymous-adds" aria-hidden="true"><span class="octicon octicon-link"></span></a>Anonymous Adds</h6>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Gomme maintained by <a href="https://github.com/Hedzer">Hedzer</a></p>
+        <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
