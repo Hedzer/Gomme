@@ -34,8 +34,8 @@ var Gomme = (function(window){
 		// collection:function(model){
 		// 	//tools for managing collections of models
 		// },
-		Constants:{
-			arrayMethodMap:(function(){
+		Maps:{
+			arrayMethod:(function(){
 				var list = {
 					"from":false,
 					"isArray":false,
@@ -74,18 +74,23 @@ var Gomme = (function(window){
 					"unobserve":false
 				};
 				Object.keys(list).forEach(function(method){
-					list[method] = function(original){
-						if (this.$ && this.$.trigger){
-							this.$.trigger(method, arguments);
-							this.$.trigger("*", arguments);
-							if (this.$.parent){
-								this.$.parent.$.trigger("*", arguments);
-							}
-						}
+					list[method] = function(array, original){
 						var args = Array.prototype.slice.call(arguments);
 						args.shift();
 						args.shift();
-						return original.apply(this, args);
+						var result = original.apply(this, args);
+						var e = {
+							arguments:args,
+							result:result
+						};
+						if (this.$ && this.$.trigger){
+							this.$.trigger(method, e);
+							this.$.trigger("*", e);
+							if (this.$.parent){
+								this.$.parent.$.trigger("*", e);
+							}
+						}
+						return result;
 					};
 				});
 				return list;
@@ -302,10 +307,10 @@ var Gomme = (function(window){
 					writable:true,
 					value:new Gomme.Classes.$(array)
 				});
-				Gomme.Constants.arrayMethodMap.forEach(function(method){
+				Object.keys(Gomme.Maps.arrayMethod).forEach(function(method){
 					if (typeof array[method] === "function"){
 						var original = array[method];
-						array[method] = Gomme.Constants.arrayMethodMap[method].bind(array, original);
+						array[method] = Gomme.Maps.arrayMethod[method].bind(array, array, original);
 					}
 				});
 				return array;
